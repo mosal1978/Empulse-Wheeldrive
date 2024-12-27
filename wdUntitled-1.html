@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMA-Bestellung Empulse F35</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            font-size: 1.2em;
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .total-cost {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .button-group {
+            margin-top: 10px;
+            text-align: right;
+        }
+        .button-group button {
+            margin-left: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>RMA-Bestellung Empulse F35</h2>
+        <form id="rmaForm">
+            <div class="form-group">
+                <label for="kunde">Kunde:</label>
+                <input type="text" id="kunde" name="kunde" required>
+                <div class="error" id="kundeError"></div>
+            </div>
+            <div class="form-group">
+                <label for="seriennummer">Seriennummer:</label>
+                <input type="text" id="seriennummer" name="seriennummer" required>
+                <div class="error" id="seriennummerError"></div>
+            </div>
+            <div class="form-group">
+                <label for="techniker">Techniker Name:</label>
+                <input type="text" id="techniker" name="techniker" required>
+                <div class="error" id="technikerError"></div>
+            </div>
+            <div class="form-group">
+                <label for="datum">Datum:</label>
+                <input type="date" id="datum" name="datum" required>
+                <div class="error" id="datumError"></div>
+            </div>
+            <div class="form-group">
+                <label for="garantie">Garantie oder Kostenvorschlag:</label>
+                <select id="garantie" name="garantie" required>
+                    <option value="">--Wählen Sie eine Option--</option>
+                    <option value="garantie">Garantie</option>
+                    <option value="kostenvorschlag">Kostenvorschlag</option>
+                </select>
+                <div class="error" id="garantieError"></div>
+            </div>
+            <div class="form-group">
+                <label for="arbeitszeit">Arbeitszeit (Stunden):</label>
+                <input type="number" id="arbeitszeit" name="arbeitszeit" step="0.1" value="0.5" required>
+                <div class="error" id="arbeitszeitError"></div>
+            </div>
+            <div class="form-group">
+                <label for="teileuebersicht">Teileübersicht:</label>
+                <table id="teileuebersicht">
+                    <thead>
+                        <tr>
+                            <th>Bestellnummer</th>
+                            <th>Bezeichnung</th>
+                            <th>Menge</th>
+                            <th>Kosten</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9007691" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Anti Tip Arm rechts" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9007963" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Anti Tip Arm links" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1020852" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Modifikationskit" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1018676" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Sensorfolie" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1020851" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Wischer" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019488" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Kleiner Greifring" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019495" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Großer Greifring" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1018679" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Battery Contacts (4pcs)" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1020824" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Batteriepack" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019578" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="User Interface" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1020856" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Feder und Anhänger" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="000283036" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Marathon Plus" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9007959" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Sicherheitsrad (2 Stück)" required></td>
+                            <td><input type="number" name="menge[]" value="2" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019487" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Abdeckung Sensorbox" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1018674" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Gehäuse komplett" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9007938" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Ladeanschlussabdeckung" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019496" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Sensorbox" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9007947" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Ladegerät" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="1019489" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Battery pack Quickie" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9012379" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Montageset 12 mm" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="9012378" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="Montageset 127 mm" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="bestellnummer[]" value="AA_Batterien" required></td>
+                            <td><input type="text" name="bezeichnung[]" value="AA Batterien Stück" required></td>
+                            <td><input type="number" name="menge[]" value="1" required></td>
+                            <td><input type="number" name="kosten[]" step="0.01" value="0.00" required></td>
+                            <td><button type="button" class="remove-row">Entfernen</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="button-group">
+                    <button type="button" id="addRow">Zeile hinzufügen</button>
+                </div>
+                <div class="total-cost">Gesamtkosten: <span id="totalCost">0.00</span> €</div>
+                <div class="error" id="teileuebersichtError"></div>
+            </div>
+            <div class="button-group">
+                <button type="submit">Bestellung absenden</button>
+            </div>
+        </form>
+        <div class="success" id="successMessage" style="display: none;">Bestellung erfolgreich abgesendet!</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('datum').value = today;
+
+            // Load data from LocalStorage
+            loadDataFromLocalStorage();
+
+            // Add row button click event
+            document.getElementById('addRow').addEventListener('click', function() {
+                addRow();
+            });
+
+            // Remove row button click event
+            document.querySelectorAll('.remove-row').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    removeRow(button);
+                });
+            });
+
+            // Calculate total cost
+            calculateTotalCost();
+
+            // Validate form fields on input
+            document.querySelectorAll('input, select').forEach(function(input) {
+                input.addEventListener('input', function() {
+                    validateField(input);
+                });
+            });
+        });
+
+        function addRow() {
+            const table = document.querySelector('#teileuebersicht tbody');
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" name="bestellnummer[]" required></td>
+                <td><input type="text" name="bezeichnung[]" required></td>
+                <td><input type="number" name="menge[]" required></td>
+                <td><input type="number" name="kosten[]" step="0.01" required></td>
+                <td><button type="button" class="remove-row">Entfernen</button></td>
+            `;
+            newRow.querySelector('.remove-row').addEventListener('click', function() {
+                removeRow(this);
+            });
+            newRow.querySelectorAll('input').forEach(function(input) {
+                input.addEventListener('input', function() {
+                    validateField(input);
+                });
+            });
+            calculateTotalCost();
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            calculateTotalCost();
+        }
+
+        function calculateTotalCost() {
+            const rows = document.querySelectorAll('#teileuebersicht tbody tr');
+            let totalCost = 0;
+            rows.forEach(function(row) {
+                const menge = parseFloat(row.querySelector('input[name="menge[]"]').value) || 0;
+                const kosten = parseFloat(row.querySelector('input[name="kosten[]"]').value) || 0;
+                totalCost += menge * kosten;
+            });
+            document.getElementById('totalCost').textContent = totalCost.toFixed(2);
+        }
+
+        function loadDataFromLocalStorage() {
+            const formData = JSON.parse(localStorage.getItem('rmaFormData'));
+            if (formData) {
+                document.getElementById('kunde').value = formData.kunde;
+                document.getElementById('seriennummer').value = formData.seriennummer;
+                document.getElementById('techniker').value = formData.techniker;
+                document.getElementById('datum').value = formData.datum;
+                document.getElementById('garantie').value = formData.garantie;
+                document.getElementById('arbeitszeit').value = formData.arbeitszeit;
+
+                const table = document.querySelector('#teileuebersicht tbody');
+                table.innerHTML = ''; // Clear existing rows
+                formData.teileuebersicht.forEach(function(rowData) {
+                    const newRow = table.insertRow();
+                    newRow.innerHTML = `
+                        <td><input type="text" name="bestellnummer[]" value="${rowData.bestellnummer}" required></td>
+                        <td><input type="text" name="bezeichnung[]" value="${rowData.bezeichnung}" required></td>
+                        <td><input type="number" name="menge[]" value="${rowData.menge}" required></td>
+                        <td><input type="number" name="kosten[]" step="0.01" value="${rowData.kosten}" required></td>
+                        <td><button type="button" class="remove-row">Entfernen</button></td>
+                    `;
+                    newRow.querySelector('.remove-row').addEventListener('click', function() {
+                        removeRow(this);
+                    });
+                    newRow.querySelectorAll('input').forEach(function(input) {
+                        input.addEventListener('input', function() {
+                            validateField(input);
+                        });
+                    });
+                });
+                calculateTotalCost();
+            }
+        }
+
+        function saveDataToLocalStorage() {
+            const formData = {
+                kunde: document.getElementById('kunde').value,
+                seriennummer: document.getElementById('seriennummer').value,
+                techniker: document.getElementById('techniker').value,
+                datum: document.getElementById('datum').value,
+                garantie: document.getElementById('garantie').value,
+                arbeitszeit: document.getElementById('arbeitszeit').value,
+                teileuebersicht: []
+            };
+
+            const rows = document.querySelectorAll('#teileuebersicht tbody tr');
+            rows.forEach(function(row) {
+                const rowData = {
+                    bestellnummer: row.querySelector('input[name="bestellnummer[]"]').value,
+                    bezeichnung: row.querySelector('input[name="bezeichnung[]"]').value,
+                    menge: row.querySelector('input[name="menge[]"]').value,
+                    kosten: row.querySelector('input[name="kosten[]"]').value
+                };
+                formData.teileuebersicht.push(rowData);
+            });
+
+            localStorage.setItem('rmaFormData', JSON.stringify(formData));
+        }
+
+        function validateField(input) {
+            const errorElement = document.getElementById(input.name + 'Error');
+            if (input.value.trim() === '') {
+                errorElement.textContent = 'Dieses Feld ist erforderlich.';
+            } else {
+                errorElement.textContent = '';
+            }
+        }
+
+        document.getElementById('rmaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(function(error) {
+                error.textContent = '';
+            });
+
+            // Validate required fields
+            const requiredFields = ['kunde', 'seriennummer', 'techniker', 'datum', 'garantie', 'arbeitszeit'];
+            requiredFields.forEach(function(field) {
+                const input = document.getElementById(field);
+                if (!input.value.trim()) {
+                    document.getElementById(field + 'Error').textContent = 'Dieses Feld ist erforderlich.';
+                    isValid = false;
+                }
+            });
+
+            // Validate Teileübersicht
+            const teileuebersicht = document.querySelectorAll('#teileuebersicht tbody tr');
+            teileuebersicht.forEach(function(row) {
+                const inputs = row.querySelectorAll('input');
+                inputs.forEach(function(input) {
+                    if (!input.value.trim()) {
+                        document.getElementById('teileuebersichtError').textContent = 'Alle Felder in der Teileübersicht sind erforderlich.';
+                        isValid = false;
+                    }
+                });
+            });
+
+            if (isValid) {
+                document.getElementById('successMessage').style.display = 'block';
+                saveDataToLocalStorage();
+                // Hier können Sie den Code zum Speichern der Daten einfügen
+            }
+        });
+    </script>
+</body>
+</html>
